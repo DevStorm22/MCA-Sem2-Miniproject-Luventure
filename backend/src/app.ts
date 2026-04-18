@@ -3,9 +3,12 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import { env } from "./config/env";
+import authRoutes from "./modules/auth/auth.routes";
 
 const app = express();
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 
 app.use(cors({
@@ -14,7 +17,6 @@ app.use(cors({
 }));
 
 app.use(morgan("dev"));
-app.use(express.json());
 
 app.get("/health", (_req, res) => {
     res.status(200).json({
@@ -22,5 +24,7 @@ app.get("/health", (_req, res) => {
         message: "Luventure API is running"
     });
 });
+
+app.use("/api/auth", authRoutes);
 
 export default app;
