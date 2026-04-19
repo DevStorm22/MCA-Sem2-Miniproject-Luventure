@@ -1,4 +1,4 @@
-package com.example.luventure.ui.theme
+package com.luventure.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

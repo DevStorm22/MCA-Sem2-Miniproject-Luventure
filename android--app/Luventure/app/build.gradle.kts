@@ -4,15 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.luventure"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    namespace = "com.luventure.app"
+    compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.luventure"
+        applicationId = "com.luventure.app"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
