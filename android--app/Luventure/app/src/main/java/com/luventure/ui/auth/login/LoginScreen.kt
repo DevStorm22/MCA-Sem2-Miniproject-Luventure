@@ -6,6 +6,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.platform.LocalContext
+import com.luventure.app.data.local.SessionManager
 
 @Composable
 fun LoginScreen(
@@ -21,8 +23,15 @@ fun LoginScreen(
     val success by vm.success.collectAsState()
     val error by vm.error.collectAsState()
 
+    val context = LocalContext.current
+    val sessionManager = SessionManager(context)
+    val token by vm.token.collectAsState()
+
     LaunchedEffect(success) {
-        if (success) onLoginSuccess()
+        if (success) {
+            sessionManager.saveToken(token)
+            onLoginSuccess()
+        }
     }
 
     Column(

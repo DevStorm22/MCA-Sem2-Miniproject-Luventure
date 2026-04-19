@@ -15,8 +15,9 @@ class LoginViewModel : ViewModel() {
 
     private val _success = MutableStateFlow(false)
     val success = _success.asStateFlow()
-
     private val _error = MutableStateFlow("")
+    private val _token = MutableStateFlow("")
+    val token = _token.asStateFlow()
     val error = _error.asStateFlow()
 
     fun login(email: String, password: String) {
@@ -31,6 +32,7 @@ class LoginViewModel : ViewModel() {
                 if (response.isSuccessful &&
                     response.body()?.success == true
                 ) {
+                    _token.value = response.body()?.data?.token ?: ""
                     _success.value = true
                 } else {
                     _error.value =
