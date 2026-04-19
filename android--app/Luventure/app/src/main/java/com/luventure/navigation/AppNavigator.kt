@@ -52,7 +52,13 @@ fun AppNavigator() {
         }
 
         composable(Routes.Home.route) {
-            HomeScreen()
+            HomeScreen(
+                onLogout = {
+                    navController.navigate(Routes.Login.route) {
+                        popUpTo(0)
+                    }
+                }
+            )
         }
     }
 }
