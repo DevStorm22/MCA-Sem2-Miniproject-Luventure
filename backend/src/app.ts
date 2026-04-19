@@ -4,6 +4,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import { env } from "./config/env";
 import authRoutes from "./modules/auth/auth.routes";
+import { protect } from "./middleware/auth.middleware";
 
 const app = express();
 
@@ -26,5 +27,12 @@ app.get("/health", (_req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+
+app.get("/api/test/private", protect, (req, res) => {
+    res.json({
+        success: true,
+        message: "Private route accessed successfully",
+    })
+})
 
 export default app;
