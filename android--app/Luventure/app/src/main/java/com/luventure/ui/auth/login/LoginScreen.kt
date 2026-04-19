@@ -36,8 +36,8 @@ fun LoginScreen(
     val sessionManager = SessionManager(context)
     val token by vm.token.collectAsState()
 
-    LaunchedEffect(success) {
-        if (success) {
+    LaunchedEffect(success, token) {
+        if (success && token.isNotBlank()) {
             sessionManager.saveToken(token)
             onLoginSuccess()
         }

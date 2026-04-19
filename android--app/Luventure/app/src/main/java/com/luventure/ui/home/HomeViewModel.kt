@@ -20,24 +20,38 @@ class HomeViewModel : ViewModel() {
 
     fun loadProfile(token: String) {
         viewModelScope.launch {
+            _loading.value = true
+
             try {
                 val response =
-                    RetrofitClient.api.me(
-                        "Bearer $token"
-                    )
+                    RetrofitClient.api.me("Bearer $token")
 
-                if (
-                    response.isSuccessful &&
-                    response.body()?.data != null
-                ) {
-                    _name.value =
-                        response.body()!!.data!!.name
+                println("DEBUG RESPONSE: ${response.code()}")
 
-                    _email.value =
-                        response.body()!!.data!!.email
+                if (response.isSuccessful) {
+
+                    val body = response.body()
+                    println("DEBUG BODY: $body")
+
+                    val data = body?.data
+
+                    if (data != null) {
+                        _name.value = data.name ?: "No Name"
+                        _email.value = data.email ?: "No Email"
+                    } else {
+                        _name.value = "NULL DATA"
+                        _email.value = ""
+                    }
+
+                } else {
+                    _name.value = "API ERROR ${response.code()}"
+                    _email.value = ""
                 }
 
-            } catch (_: Exception) {
+            } catch (e: Exception) {
+                _name.value = "Exception"
+                _email.value = e.message ?: "error"
+                e.printStackTrace()
             }
 
             _loading.value = false

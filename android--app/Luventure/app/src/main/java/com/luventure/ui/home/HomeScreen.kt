@@ -13,7 +13,8 @@ import com.luventure.app.data.local.SessionManager
 
 @Composable
 fun HomeScreen(
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    onEditProfile: () -> Unit
 ) {
     val context = LocalContext.current
     val session = SessionManager(context)
@@ -25,8 +26,13 @@ fun HomeScreen(
     val loading by vm.loading.collectAsState()
 
     LaunchedEffect(Unit) {
-        session.getToken()?.let {
-            vm.loadProfile(it)
+        val token = session.getToken()
+        println("HOME TOKEN = $token")
+
+        if (!token.isNullOrBlank()) {
+            vm.loadProfile(token)
+        } else {
+            println("TOKEN MISSING ❌")
         }
     }
 
@@ -54,10 +60,12 @@ fun HomeScreen(
 
         Spacer(Modifier.height(24.dp))
 
-        DashboardCard(
-            title = "Edit Profile",
-            desc = "Update your details soon."
-        )
+        Button(
+            onClick = onEditProfile,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Edit Profile")
+        }
 
         Spacer(Modifier.height(12.dp))
 

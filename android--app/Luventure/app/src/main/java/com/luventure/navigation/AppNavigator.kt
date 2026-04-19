@@ -5,6 +5,7 @@ import androidx.navigation.compose.*
 import com.luventure.app.ui.auth.login.LoginScreen
 import com.luventure.app.ui.auth.register.RegisterScreen
 import com.luventure.app.ui.home.HomeScreen
+import com.luventure.app.ui.profile.EditProfileScreen
 import com.luventure.app.ui.splash.SplashScreen
 
 @Composable
@@ -21,12 +22,16 @@ fun AppNavigator() {
             SplashScreen(
                 onGoLogin = {
                     navController.navigate(Routes.Login.route) {
-                        popUpTo(0)
+                        popUpTo(Routes.Splash.route) {
+                            inclusive = true
+                        }
                     }
                 },
                 onGoHome = {
                     navController.navigate(Routes.Home.route) {
-                        popUpTo(0)
+                        popUpTo(Routes.Splash.route) {
+                            inclusive = true
+                        }
                     }
                 }
             )
@@ -38,7 +43,11 @@ fun AppNavigator() {
                     navController.navigate(Routes.Register.route)
                 },
                 onLoginSuccess = {
-                    navController.navigate(Routes.Home.route)
+                    navController.navigate(Routes.Home.route) {
+                        popUpTo(Routes.Login.route) {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }
@@ -55,8 +64,21 @@ fun AppNavigator() {
             HomeScreen(
                 onLogout = {
                     navController.navigate(Routes.Login.route) {
-                        popUpTo(0)
+                        popUpTo(Routes.Home.route) {
+                            inclusive = true
+                        }
                     }
+                },
+                onEditProfile = {
+                    navController.navigate(Routes.EditProfile.route)
+                }
+            )
+        }
+
+        composable(Routes.EditProfile.route) {
+            EditProfileScreen(
+                onSaved = {
+                    navController.popBackStack()
                 }
             )
         }

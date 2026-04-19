@@ -5,7 +5,7 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.http.GET
 import retrofit2.http.Header
-
+import retrofit2.http.PATCH
 interface AuthApi {
 
     @POST("api/auth/login")
@@ -13,7 +13,7 @@ interface AuthApi {
         @Body request: LoginRequest
     ): Response<LoginResponse>
 
-    @GET("api/users/me")
+    @GET("api/user/me")
     suspend fun me(
         @Header("Authorization") token: String
     ): Response<MeResponse>
@@ -21,5 +21,11 @@ interface AuthApi {
     @POST("api/auth/register")
     suspend fun register(
         @Body request: RegisterRequest
+    ): Response<BasicResponse>
+
+    @PATCH("api/user/update-profile")
+    suspend fun updateProfile(
+        @Header("Authorization") token: String,
+        @Body request: UpdateProfileRequest
     ): Response<BasicResponse>
 }

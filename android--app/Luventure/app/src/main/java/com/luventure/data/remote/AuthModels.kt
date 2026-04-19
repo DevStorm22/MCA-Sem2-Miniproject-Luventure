@@ -32,3 +32,7 @@ data class BasicResponse(
     val success: Boolean,
     val message: String
 )
+
+data class UpdateProfileRequest(
+    val name: String
+)
