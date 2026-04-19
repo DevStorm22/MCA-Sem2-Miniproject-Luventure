@@ -6,6 +6,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.luventure.app.utils.Validators
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 
 @Composable
 fun RegisterScreen(
@@ -20,6 +22,10 @@ fun RegisterScreen(
     val loading by vm.loading.collectAsState()
     val success by vm.success.collectAsState()
     val error by vm.error.collectAsState()
+
+    var localError by remember {
+        mutableStateOf("")
+    }
 
     LaunchedEffect(success) {
         if (success) {
@@ -56,14 +62,37 @@ fun RegisterScreen(
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") }
+            label = { Text("Password") },
+            visualTransformation =
+                PasswordVisualTransformation()
         )
 
         Spacer(Modifier.height(16.dp))
 
         Button(
             onClick = {
-                vm.register(name, email, password)
+                when {
+                    !Validators.isValidName(name) ->
+                        localError = "Name too short"
+
+                    email.isBlank() ->
+                        localError = "Email required"
+
+                    !Validators.isValidEmail(email) ->
+                        localError = "Invalid email"
+
+                    !Validators.isValidPassword(password) ->
+                        localError = "Password must be 6+ chars"
+
+                    else -> {
+                        localError = ""
+                        vm.register(
+                            name.trim(),
+                            email.trim(),
+                            password
+                        )
+                    }
+                }
             },
             enabled = !loading
         ) {

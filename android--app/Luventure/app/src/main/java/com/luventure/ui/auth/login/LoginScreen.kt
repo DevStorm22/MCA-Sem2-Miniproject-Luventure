@@ -8,12 +8,21 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.platform.LocalContext
 import com.luventure.app.data.local.SessionManager
+import com.luventure.app.utils.Validators
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 
 @Composable
 fun LoginScreen(
     onRegisterClick: () -> Unit,
     onLoginSuccess: () -> Unit
 ) {
+
+    var localError by remember {
+        mutableStateOf("")
+    }
+    if (localError.isNotBlank()) {
+        Text(localError)
+    }
     val vm: LoginViewModel = viewModel()
 
     var email by remember { mutableStateOf("") }
@@ -55,14 +64,37 @@ fun LoginScreen(
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") }
+            label = { Text("Password") },
+            visualTransformation =
+                PasswordVisualTransformation()
         )
 
         Spacer(Modifier.height(16.dp))
 
         Button(
             onClick = {
-                vm.login(email, password)
+                when {
+                    email.isBlank() -> {
+                        localError = "Email required"
+                    }
+
+                    !Validators.isValidEmail(email) -> {
+                        localError = "Invalid email format"
+                    }
+
+                    password.isBlank() -> {
+                        localError = "Password required"
+                    }
+
+                    !Validators.isValidPassword(password) -> {
+                        localError = "Password must be 6+ chars"
+                    }
+
+                    else -> {
+                        localError = ""
+                        vm.login(email.trim(), password)
+                    }
+                }
             },
             enabled = !loading
         ) {
