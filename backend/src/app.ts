@@ -5,6 +5,7 @@ import morgan from "morgan";
 import { env } from "./config/env";
 import authRoutes from "./modules/auth/auth.routes";
 import { protect } from "./middleware/auth.middleware";
+import userRoutes from "./modules/user/user.routes";
 
 const app = express();
 
@@ -34,5 +35,7 @@ app.get("/api/test/private", protect, (req, res) => {
         message: "Private route accessed successfully",
     })
 })
+
+app.use("/api/user", userRoutes);
 
 export default app;
