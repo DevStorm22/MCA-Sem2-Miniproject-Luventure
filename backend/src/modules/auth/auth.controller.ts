@@ -55,3 +55,18 @@ export const login = async (req: Request, res: Response) => {
         })
     }
 }
+
+export const logout = async (req: any, res: any) => {
+    try {
+        req.user = null;
+        return res.status(200).json({
+            success: true,
+            message: "Logout Successfully",
+        });
+    } catch (error: any) {
+        return res.status(400).json({
+            success: false,
+            message: error.message
+        })
+    }
+}

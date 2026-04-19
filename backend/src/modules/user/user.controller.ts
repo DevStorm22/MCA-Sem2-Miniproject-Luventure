@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import { getCurrentUser } from "./user.service";
+import { getCurrentUser, updateProfile } from "./user.service";
 import { authRequest } from "../../middleware/auth.middleware";
-import { updateProfile } from "./user.service";
 
 export const getMe = async (req: authRequest, res: Response) => {
     try {

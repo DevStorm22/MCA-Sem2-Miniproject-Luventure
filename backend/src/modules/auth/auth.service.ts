@@ -47,3 +47,11 @@ export const loginUser = async (email: string, password: string) => {
         },
     };
 }
+
+export const logoutUser = async (userId: string) => {
+    const user = await User.findByIdAndUpdate(userId, { isOnline: false, lastSeen: new Date() }, { new: true }).select("-password");
+    if (!user) {
+        throw new Error("User not found!");
+    }
+    return user;
+}
