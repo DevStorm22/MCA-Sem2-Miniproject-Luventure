@@ -17,4 +17,9 @@ interface AuthApi {
     suspend fun me(
         @Header("Authorization") token: String
     ): Response<MeResponse>
+
+    @POST("api/auth/register")
+    suspend fun register(
+        @Body request: RegisterRequest
+    ): Response<BasicResponse>
 }

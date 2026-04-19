@@ -21,3 +21,14 @@ data class LoginResponse(
     val message: String,
     val data: LoginData?
 )
+
+data class RegisterRequest(
+    val name: String,
+    val email: String,
+    val password: String
+)
+
+data class BasicResponse(
+    val success: Boolean,
+    val message: String
+)
