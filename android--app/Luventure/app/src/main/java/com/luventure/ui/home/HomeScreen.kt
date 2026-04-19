@@ -3,11 +3,12 @@ package com.luventure.app.ui.home
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.luventure.app.data.local.SessionManager
 
 @Composable
@@ -17,43 +18,59 @@ fun HomeScreen(
     val context = LocalContext.current
     val session = SessionManager(context)
 
+    val vm: HomeViewModel = viewModel()
+
+    val name by vm.name.collectAsState()
+    val email by vm.email.collectAsState()
+    val loading by vm.loading.collectAsState()
+
+    LaunchedEffect(Unit) {
+        session.getToken()?.let {
+            vm.loadProfile(it)
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(20.dp)
     ) {
 
-        Text(
-            text = "Welcome to Luventure",
-            fontSize = 28.sp
-        )
+        if (loading) {
+            Text("Loading profile...")
+        } else {
+            Text(
+                text = "Hello, $name",
+                fontSize = 28.sp
+            )
 
-        Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(8.dp))
 
-        Text(
-            text = "Build meaningful connections.",
-            fontSize = 16.sp
-        )
+            Text(
+                text = email,
+                fontSize = 16.sp
+            )
+        }
 
         Spacer(Modifier.height(24.dp))
 
         DashboardCard(
-            title = "Start Chat",
-            desc = "Messaging module coming soon."
+            title = "Edit Profile",
+            desc = "Update your details soon."
         )
 
         Spacer(Modifier.height(12.dp))
 
         DashboardCard(
-            title = "Edit Profile",
-            desc = "Manage your account details."
+            title = "Start Chat",
+            desc = "Messaging coming soon."
         )
 
         Spacer(Modifier.height(12.dp))
 
         DashboardCard(
             title = "Discover People",
-            desc = "Find like-minded users soon."
+            desc = "Find people soon."
         )
 
         Spacer(Modifier.height(24.dp))
@@ -86,8 +103,12 @@ fun DashboardCard(
                 text = title,
                 fontSize = 20.sp
             )
-            Spacer(Modifier.height(6.dp))
-            Text(desc)
+
+            Spacer(
+                modifier = Modifier.height(6.dp)
+            )
+
+            Text(text = desc)
         }
     }
 }
