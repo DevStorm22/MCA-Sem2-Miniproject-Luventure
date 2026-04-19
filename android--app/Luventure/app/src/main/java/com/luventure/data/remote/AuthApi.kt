@@ -16,5 +16,5 @@ interface AuthApi {
     @GET("api/users/me")
     suspend fun me(
         @Header("Authorization") token: String
-    ): Response<Any>
+    ): Response<MeResponse>
 }

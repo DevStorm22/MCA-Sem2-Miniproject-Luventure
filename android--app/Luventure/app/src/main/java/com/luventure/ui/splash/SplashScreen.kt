@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
 import com.luventure.app.data.local.SessionManager
+import com.luventure.app.data.remote.RetrofitClient
 import kotlinx.coroutines.delay
 
 @Composable
@@ -19,14 +20,35 @@ fun SplashScreen(
     val session = SessionManager(context)
 
     LaunchedEffect(Unit) {
-        delay(1500)
+
+        delay(1200)
 
         val token = session.getToken()
 
         if (token.isNullOrBlank()) {
             onGoLogin()
-        } else {
-            onGoHome()
+            return@LaunchedEffect
+        }
+
+        try {
+            val response =
+                RetrofitClient.api.me(
+                    "Bearer $token"
+                )
+
+            if (
+                response.isSuccessful &&
+                response.body()?.success == true
+            ) {
+                onGoHome()
+            } else {
+                session.clearToken()
+                onGoLogin()
+            }
+
+        } catch (e: Exception) {
+            session.clearToken()
+            onGoLogin()
         }
     }
 
