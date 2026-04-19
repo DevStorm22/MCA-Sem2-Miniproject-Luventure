@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import { User } from "./user.model";
+import { generateToken } from "../../utils/jwt";
 
 export const registerUser = async (
     name: string,
@@ -26,3 +27,23 @@ export const registerUser = async (
         email: user.email
     };
 };
+
+export const loginUser = async (email: string, password: string) => {
+    const user = await User.findOne({ email });
+    if (!user) {
+        throw new Error("Invalid credentials");
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+        throw new Error("Password Incorrect");
+    }
+    const token = generateToken(user._id.toString());
+    return {
+        token,
+        user: {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+        },
+    };
+}

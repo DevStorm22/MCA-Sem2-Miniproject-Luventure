@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { registerUser } from "./auth.service";
+import { registerUser, loginUser } from "./auth.service";
 
 export const register = async (req: Request, res: Response) => {
     try {
@@ -26,3 +26,32 @@ export const register = async (req: Request, res: Response) => {
         });
     }
 };
+
+export const login = async (req: Request, res: Response) => {
+    try {
+        const { email, password } = req.body;
+        if (!email || !password) {
+            throw new Error("Blank fileds");
+        }
+        if (!email.includes("@")) {
+            throw new Error("Invalid Email");
+        }
+        const user = await loginUser(email, password);
+        if (!user) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid Credentials"
+            })
+        }
+        return res.status(200).json({
+            success: true,
+            message: "Login Successfull",
+            data: user
+        })
+    } catch (error: any) {
+        return res.status(400).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
