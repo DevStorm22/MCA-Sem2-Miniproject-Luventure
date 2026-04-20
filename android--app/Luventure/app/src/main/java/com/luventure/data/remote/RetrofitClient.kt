@@ -1,6 +1,7 @@
 package com.luventure.app.data.remote
 
 import com.luventure.app.utils.Constants
+import com.luventure.data.remote.AuthApi
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

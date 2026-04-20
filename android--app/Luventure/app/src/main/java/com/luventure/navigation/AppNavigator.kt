@@ -7,6 +7,7 @@ import com.luventure.app.ui.auth.register.RegisterScreen
 import com.luventure.ui.home.HomeScreen
 import com.luventure.app.ui.profile.EditProfileScreen
 import com.luventure.app.ui.splash.SplashScreen
+import com.luventure.ui.chat.ChatListScreen
 
 @Composable
 fun AppNavigator() {
@@ -79,6 +80,14 @@ fun AppNavigator() {
             EditProfileScreen(
                 onSaved = {
                     navController.popBackStack()
+                }
+            )
+        }
+
+        composable("chats") {
+            ChatListScreen(
+                onOpenChat = { convoId ->
+                    // next step
                 }
             )
         }
