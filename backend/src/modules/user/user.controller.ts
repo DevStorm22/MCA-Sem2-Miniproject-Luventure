@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import { getCurrentUser, updateProfile } from "./user.service";
 import { authRequest } from "../../middleware/auth.middleware";
 

@@ -6,6 +6,7 @@ import { env } from "./config/env";
 import authRoutes from "./modules/auth/auth.routes";
 import { protect } from "./middleware/auth.middleware";
 import userRoutes from "./modules/user/user.routes";
+import chatRoutes from "./modules/conversation/chat.routes";
 
 const app = express();
 
@@ -37,5 +38,7 @@ app.get("/api/test/private", protect, (req, res) => {
 })
 
 app.use("/api/user", userRoutes);
+
+app.use("/api/chat", chatRoutes);
 
 export default app;
