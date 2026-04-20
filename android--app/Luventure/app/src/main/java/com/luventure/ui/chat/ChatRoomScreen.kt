@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.luventure.app.data.local.SessionManager
+import kotlinx.coroutines.delay
 
 @Composable
 fun ChatRoomScreen(
@@ -27,8 +28,18 @@ fun ChatRoomScreen(
     }
 
     LaunchedEffect(Unit) {
-        session.getToken()?.let {
-            vm.load(it, conversationId)
+
+        session.getToken()?.let { token ->
+
+            while (true) {
+
+                vm.load(
+                    token,
+                    conversationId
+                )
+
+                delay(3000)
+            }
         }
     }
 
