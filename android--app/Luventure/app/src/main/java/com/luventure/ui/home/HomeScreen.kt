@@ -17,7 +17,8 @@ import com.luventure.app.R
 @Composable
 fun HomeScreen(
     onLogout: () -> Unit,
-    onEditProfile: () -> Unit
+    onEditProfile: () -> Unit,
+    onOpenChats: () -> Unit
 ) {
     val context = LocalContext.current
     val session = SessionManager(context)
@@ -78,10 +79,12 @@ fun HomeScreen(
 
         Spacer(Modifier.height(12.dp))
 
-        DashboardCard(
-            title = "Start Chat",
-            desc = "Messaging coming soon."
-        )
+        Button(
+            onClick = onOpenChats,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Start Chat")
+        }
 
         Spacer(Modifier.height(12.dp))
 

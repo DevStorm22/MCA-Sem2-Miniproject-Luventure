@@ -1,7 +1,8 @@
-package com.luventure.app.navigation
+package com.luventure.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.*
+import com.luventure.app.navigation.Routes
 import com.luventure.ui.auth.login.LoginScreen
 import com.luventure.app.ui.auth.register.RegisterScreen
 import com.luventure.ui.home.HomeScreen
@@ -71,7 +72,12 @@ fun AppNavigator() {
                     }
                 },
                 onEditProfile = {
-                    navController.navigate(Routes.EditProfile.route)
+                    navController.navigate(
+                        Routes.EditProfile.route
+                    )
+                },
+                onOpenChats = {
+                    navController.navigate("chats")
                 }
             )
         }

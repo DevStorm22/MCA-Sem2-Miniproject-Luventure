@@ -3,7 +3,7 @@ package com.luventure.app
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.luventure.app.navigation.AppNavigator
+import com.luventure.navigation.AppNavigator
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
