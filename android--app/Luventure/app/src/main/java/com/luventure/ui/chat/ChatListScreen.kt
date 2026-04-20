@@ -42,6 +42,8 @@ fun ChatListScreen(
 
         if (loading) {
             Text("Loading...")
+        } else if (chats.isEmpty()) {
+            Text("No conversations found")
         } else {
             LazyColumn {
                 items(chats) { item ->

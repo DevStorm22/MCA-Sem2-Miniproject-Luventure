@@ -5,6 +5,7 @@ import androidx.navigation.compose.*
 import com.luventure.app.navigation.Routes
 import com.luventure.ui.auth.login.LoginScreen
 import com.luventure.app.ui.auth.register.RegisterScreen
+import com.luventure.app.ui.chat.ChatRoomScreen
 import com.luventure.ui.home.HomeScreen
 import com.luventure.app.ui.profile.EditProfileScreen
 import com.luventure.app.ui.splash.SplashScreen
@@ -92,9 +93,23 @@ fun AppNavigator() {
 
         composable("chats") {
             ChatListScreen(
-                onOpenChat = { convoId ->
-                    // next step
+                onOpenChat = { id ->
+                    navController.navigate(
+                        "chatRoom/$id"
+                    )
                 }
+            )
+        }
+
+        composable("chatRoom/{id}") { backStack ->
+
+            val id =
+                backStack.arguments
+                    ?.getString("id")
+                    ?: ""
+
+            ChatRoomScreen(
+                conversationId = id
             )
         }
     }
