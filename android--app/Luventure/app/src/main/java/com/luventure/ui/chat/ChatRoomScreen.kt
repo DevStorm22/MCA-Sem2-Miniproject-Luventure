@@ -38,14 +38,19 @@ fun ChatRoomScreen(
             .padding(12.dp)
     ) {
 
-        Text("Chat")
+        Text(
+            text = "Chat",
+            style = MaterialTheme.typography.titleLarge
+        )
 
         Spacer(Modifier.height(12.dp))
 
         LazyColumn(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            reverseLayout = false
         ) {
             items(messages) { msg ->
+
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -60,26 +65,36 @@ fun ChatRoomScreen(
             }
         }
 
-        Row {
+        Spacer(Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+
             OutlinedTextField(
                 value = text,
                 onValueChange = {
                     text = it
                 },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                placeholder = {
+                    Text("Type message")
+                }
             )
 
             Spacer(Modifier.width(8.dp))
 
             Button(
                 onClick = {
-                    session.getToken()?.let {
-                        vm.send(
-                            it,
-                            conversationId,
-                            text
-                        )
-                        text = ""
+                    if (text.isNotBlank()) {
+                        session.getToken()?.let {
+                            vm.send(
+                                it,
+                                conversationId,
+                                text.trim()
+                            )
+                            text = ""
+                        }
                     }
                 }
             ) {

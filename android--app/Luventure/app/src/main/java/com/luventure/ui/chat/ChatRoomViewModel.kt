@@ -29,7 +29,8 @@ class ChatRoomViewModel : ViewModel() {
                         id
                     )
 
-                if (res.isSuccessful &&
+                if (
+                    res.isSuccessful &&
                     res.body() != null
                 ) {
                     _messages.value =
@@ -55,10 +56,11 @@ class ChatRoomViewModel : ViewModel() {
                     SendMessageRequest(text)
                 )
 
-                delay(300)
                 load(token, id)
 
-            } catch (_: Exception) {}
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 }
