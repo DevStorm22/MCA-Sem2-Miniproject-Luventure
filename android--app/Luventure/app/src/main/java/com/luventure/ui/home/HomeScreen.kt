@@ -1,4 +1,4 @@
-package com.luventure.app.ui.home
+package com.luventure.ui.home
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,7 +9,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
 import com.luventure.app.data.local.SessionManager
+import com.luventure.app.R
 
 @Composable
 fun HomeScreen(
@@ -32,7 +35,7 @@ fun HomeScreen(
         if (!token.isNullOrBlank()) {
             vm.loadProfile(token)
         } else {
-            println("TOKEN MISSING ❌")
+            println("TOKEN MISSING")
         }
     }
 
@@ -41,6 +44,12 @@ fun HomeScreen(
             .fillMaxSize()
             .padding(20.dp)
     ) {
+
+        Image(
+            painter = painterResource(id = R.drawable.logo),
+            contentDescription = "App Logo",
+            modifier = Modifier.size(120.dp)
+        )
 
         if (loading) {
             Text("Loading profile...")

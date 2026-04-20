@@ -1,4 +1,4 @@
-package com.luventure.app.ui.home
+package com.luventure.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -36,8 +36,8 @@ class HomeViewModel : ViewModel() {
                     val data = body?.data
 
                     if (data != null) {
-                        _name.value = data.name ?: "No Name"
-                        _email.value = data.email ?: "No Email"
+                        data.name.also { _name.value = it }
+                        _email.value = data.email
                     } else {
                         _name.value = "NULL DATA"
                         _email.value = ""

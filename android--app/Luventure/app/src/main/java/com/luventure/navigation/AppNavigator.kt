@@ -2,9 +2,9 @@ package com.luventure.app.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.*
-import com.luventure.app.ui.auth.login.LoginScreen
+import com.luventure.ui.auth.login.LoginScreen
 import com.luventure.app.ui.auth.register.RegisterScreen
-import com.luventure.app.ui.home.HomeScreen
+import com.luventure.ui.home.HomeScreen
 import com.luventure.app.ui.profile.EditProfileScreen
 import com.luventure.app.ui.splash.SplashScreen
 
