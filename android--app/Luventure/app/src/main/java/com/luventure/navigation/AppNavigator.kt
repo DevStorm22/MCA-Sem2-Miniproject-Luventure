@@ -109,7 +109,8 @@ fun AppNavigator() {
                     ?: ""
 
             ChatRoomScreen(
-                conversationId = id
+                conversationId = id,
+                currentUserId = ""
             )
         }
     }
