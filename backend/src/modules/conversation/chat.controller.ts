@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Conversation } from "./conversation.model";
 import { Message } from "./message.model";
 import { authRequest } from "../../middleware/auth.middleware";
+import { getIO } from "../../socket";
 
 export const startChat = async (
     req: any,
@@ -89,21 +90,27 @@ export const sendMessage = async (
 ) => {
     try {
         const sender = req.user!.userId as string;
-
         const { text } = req.body;
+        const roomId =
+            req.params.conversationId as string;
 
         const msg = await Message.create({
-            conversationId: req.params.conversationId as string,
-            sender: sender as string,
+            conversationId: roomId,
+            sender,
             text
         });
 
         await Conversation.findByIdAndUpdate(
-            req.params.conversationId as string,
+            roomId,
             {
                 lastMessage: text,
                 lastMessageAt: new Date()
             }
+        );
+
+        getIO().to(roomId).emit(
+            "new_message",
+            msg
         );
 
         return res.status(201).json({
