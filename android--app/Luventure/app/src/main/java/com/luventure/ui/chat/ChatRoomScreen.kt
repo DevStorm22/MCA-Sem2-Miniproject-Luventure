@@ -16,7 +16,8 @@ import com.luventure.app.ui.chat.ChatRoomViewModel
 @Composable
 fun ChatRoomScreen(
     conversationId: String,
-    currentUserId: String
+    currentUserId: String,
+    onBack: () -> Unit
 ) {
     val context = LocalContext.current
     val session = SessionManager(context)
@@ -39,10 +40,26 @@ fun ChatRoomScreen(
             .padding(12.dp)
     ) {
 
-        Text(
-            text = "Chat",
-            style = MaterialTheme.typography.titleLarge
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+
+            Button(
+                onClick = { onBack() }
+            ) {
+                Text("Back")
+            }
+
+            Text(
+                text = "Chat",
+                style = MaterialTheme.typography.titleLarge
+            )
+
+            Spacer(
+                modifier = Modifier.width(8.dp)
+            )
+        }
 
         Spacer(Modifier.height(12.dp))
 
