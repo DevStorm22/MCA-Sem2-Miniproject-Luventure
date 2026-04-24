@@ -24,6 +24,10 @@ fun DiscoverScreen(
     val users by vm.users.collectAsState()
     val chatId by vm.chatId.collectAsState()
 
+    var search by remember {
+        mutableStateOf("")
+    }
+
     LaunchedEffect(Unit) {
         session.getToken()?.let {
             vm.load(it)
@@ -34,6 +38,12 @@ fun DiscoverScreen(
         if (chatId.isNotBlank()) {
             onOpenChat(chatId)
         }
+    }
+
+    val filteredUsers = users.filter {
+
+        it.name.contains(search, true) ||
+                it.email.contains(search, true)
     }
 
     Column(
@@ -49,9 +59,22 @@ fun DiscoverScreen(
 
         Spacer(Modifier.height(12.dp))
 
+        OutlinedTextField(
+            value = search,
+            onValueChange = {
+                search = it
+            },
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = {
+                Text("Search users...")
+            }
+        )
+
+        Spacer(Modifier.height(12.dp))
+
         LazyColumn {
 
-            items(users) { user ->
+            items(filteredUsers) { user ->
 
                 Card(
                     modifier = Modifier
@@ -85,6 +108,11 @@ fun DiscoverScreen(
                     }
                 }
             }
+        }
+
+        if (filteredUsers.isEmpty()) {
+            Spacer(Modifier.height(16.dp))
+            Text("No users found")
         }
     }
 }
