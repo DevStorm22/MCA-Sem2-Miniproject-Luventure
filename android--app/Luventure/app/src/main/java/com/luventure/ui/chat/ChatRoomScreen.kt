@@ -50,13 +50,14 @@ fun ChatRoomScreen(
     }
 
     LaunchedEffect(conversationId) {
-        session.getToken()?.let { token ->
-            while (true) {
-                vm.load(token, conversationId)
-                delay(3000)
-            }
-        }
+
+    session.getToken()?.let { token ->
+
+        vm.load(token, conversationId)
+
+        vm.connectRoom(conversationId)
     }
+}
 
     Column(
         modifier = Modifier
