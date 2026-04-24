@@ -9,6 +9,8 @@ import com.luventure.app.data.remote.UpdateProfileRequest
 import com.luventure.ui.chat.ConversationResponse
 import com.luventure.ui.chat.MessageResponse
 import com.luventure.ui.chat.SendMessageRequest
+import com.luventure.ui.discover.DiscoverResponse
+import com.luventure.ui.chat.StartChatResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -57,4 +59,15 @@ interface AuthApi {
         @Path("id") id: String,
         @Body body: SendMessageRequest
     ): Response<Any>
+
+    @GET("api/user/discover")
+    suspend fun discoverUsers(
+        @Header("Authorization") token: String
+    ): Response<DiscoverResponse>
+
+    @POST("api/chat/start/{userId}")
+    suspend fun startChat(
+        @Header("Authorization") token: String,
+        @Path("userId") userId: String
+    ): Response<StartChatResponse>
 }

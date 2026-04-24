@@ -4,8 +4,8 @@ import { Message } from "./message.model";
 import { authRequest } from "../../middleware/auth.middleware";
 
 export const startChat = async (
-    req: authRequest,
-    res: Response
+    req: any,
+    res: any
 ) => {
     try {
         const myId = req.user!.userId as string;

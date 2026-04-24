@@ -18,7 +18,8 @@ import com.luventure.app.R
 fun HomeScreen(
     onLogout: () -> Unit,
     onEditProfile: () -> Unit,
-    onOpenChats: () -> Unit
+    onOpenChats: () -> Unit,
+    onOpenDiscover: () -> Unit
 ) {
     val context = LocalContext.current
     val session = SessionManager(context)
@@ -88,16 +89,18 @@ fun HomeScreen(
 
         Spacer(Modifier.height(12.dp))
 
-        DashboardCard(
-            title = "Discover People",
-            desc = "Find people soon."
-        )
+        Button(
+            onClick = onOpenDiscover,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Discover People")
+        }
 
         Spacer(Modifier.height(24.dp))
 
         Button(
             onClick = {
-                session.clearToken()
+                session.clearSession()
                 onLogout()
             },
             modifier = Modifier.fillMaxWidth()

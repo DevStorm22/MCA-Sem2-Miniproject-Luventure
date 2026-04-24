@@ -1,18 +1,18 @@
 package com.luventure.ui.auth.login
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.foundation.Image
-import androidx.compose.ui.res.painterResource
 import com.luventure.app.R
-import com.luventure.app.ui.auth.login.LoginViewModel
 import com.luventure.app.data.local.SessionManager
+import com.luventure.app.ui.auth.login.LoginViewModel
 import com.luventure.app.utils.Validators
 
 @Composable
@@ -21,28 +21,25 @@ fun LoginScreen(
     onLoginSuccess: () -> Unit
 ) {
 
-    var localError by remember {
-        mutableStateOf("")
-    }
-    if (localError.isNotBlank()) {
-        Text(localError)
-    }
     val vm: LoginViewModel = viewModel()
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var localError by remember { mutableStateOf("") }
 
     val loading by vm.loading.collectAsState()
     val success by vm.success.collectAsState()
+    val token by vm.token.collectAsState()
+    val userId by vm.userId.collectAsState()
     val error by vm.error.collectAsState()
 
     val context = LocalContext.current
-    val sessionManager = SessionManager(context)
-    val token by vm.token.collectAsState()
+    val session = SessionManager(context)
 
-    LaunchedEffect(success, token) {
+    LaunchedEffect(success, token, userId) {
         if (success && token.isNotBlank()) {
-            sessionManager.saveToken(token)
+            session.saveToken(token)
+            session.saveUserId(userId)
             onLoginSuccess()
         }
     }
@@ -53,14 +50,14 @@ fun LoginScreen(
             .padding(24.dp),
         verticalArrangement = Arrangement.Center
     ) {
+
         Image(
             painter = painterResource(id = R.drawable.logo),
-            contentDescription = "App Logo",
+            contentDescription = null,
             modifier = Modifier.size(120.dp)
         )
-        Text("Login")
 
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(16.dp))
 
         OutlinedTextField(
             value = email,
@@ -74,8 +71,7 @@ fun LoginScreen(
             value = password,
             onValueChange = { password = it },
             label = { Text("Password") },
-            visualTransformation =
-                PasswordVisualTransformation()
+            visualTransformation = PasswordVisualTransformation()
         )
 
         Spacer(Modifier.height(16.dp))
@@ -83,22 +79,9 @@ fun LoginScreen(
         Button(
             onClick = {
                 when {
-                    email.isBlank() -> {
-                        localError = "Email required"
-                    }
-
-                    !Validators.isValidEmail(email) -> {
-                        localError = "Invalid email format"
-                    }
-
-                    password.isBlank() -> {
-                        localError = "Password required"
-                    }
-
-                    !Validators.isValidPassword(password) -> {
-                        localError = "Password must be 6+ chars"
-                    }
-
+                    email.isBlank() -> localError = "Email required"
+                    !Validators.isValidEmail(email) -> localError = "Invalid email"
+                    password.isBlank() -> localError = "Password required"
                     else -> {
                         localError = ""
                         vm.login(email.trim(), password)
@@ -110,9 +93,8 @@ fun LoginScreen(
             Text(if (loading) "Loading..." else "Login")
         }
 
-        if (error.isNotBlank()) {
-            Text(error)
-        }
+        if (localError.isNotBlank()) Text(localError)
+        if (error.isNotBlank()) Text(error)
 
         TextButton(onClick = onRegisterClick) {
             Text("Create Account")
