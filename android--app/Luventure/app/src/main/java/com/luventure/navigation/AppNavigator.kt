@@ -113,7 +113,10 @@ fun AppNavigator() {
 
             ChatRoomScreen(
                 conversationId = id,
-                currentUserId = session.getUserId() ?: ""
+                currentUserId = session.getUserId() ?: "",
+                onBack = {
+                    navController.popBackStack()
+                }
             )
         }
 
