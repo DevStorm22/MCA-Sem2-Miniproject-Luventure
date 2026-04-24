@@ -10,7 +10,7 @@ import com.luventure.ui.chat.ConversationResponse
 import com.luventure.ui.chat.MessageResponse
 import com.luventure.ui.chat.SendMessageRequest
 import com.luventure.ui.discover.DiscoverResponse
-import com.luventure.ui.chat.StartChatResponse
+import com.luventure.ui.discover.StartChatResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
