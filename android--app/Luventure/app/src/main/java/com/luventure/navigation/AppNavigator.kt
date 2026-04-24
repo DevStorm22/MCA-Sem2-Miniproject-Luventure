@@ -1,15 +1,17 @@
 package com.luventure.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.*
-import com.luventure.app.navigation.Routes
+import com.luventure.app.data.local.SessionManager
 import com.luventure.ui.auth.login.LoginScreen
 import com.luventure.app.ui.auth.register.RegisterScreen
-import com.luventure.app.ui.chat.ChatRoomScreen
+import com.luventure.ui.chat.ChatRoomScreen
 import com.luventure.ui.home.HomeScreen
 import com.luventure.app.ui.profile.EditProfileScreen
 import com.luventure.app.ui.splash.SplashScreen
 import com.luventure.ui.chat.ChatListScreen
+import com.luventure.ui.discover.DiscoverScreen
 
 @Composable
 fun AppNavigator() {
@@ -79,6 +81,9 @@ fun AppNavigator() {
                 },
                 onOpenChats = {
                     navController.navigate("chats")
+                },
+                onOpenDiscover = {
+                    navController.navigate(Routes.Discover.route)
                 }
             )
         }
@@ -102,15 +107,18 @@ fun AppNavigator() {
         }
 
         composable("chatRoom/{id}") { backStack ->
-
-            val id =
-                backStack.arguments
-                    ?.getString("id")
-                    ?: ""
+            val id = backStack.arguments?.getString("id") ?: ""
+            val context = LocalContext.current
+            val session = SessionManager(context)
 
             ChatRoomScreen(
-                conversationId = id
+                conversationId = id,
+                currentUserId = session.getUserId() ?: ""
             )
+        }
+        
+        composable(Routes.Discover.route) {
+            DiscoverScreen()
         }
     }
 }

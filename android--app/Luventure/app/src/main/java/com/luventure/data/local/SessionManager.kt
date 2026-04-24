@@ -11,14 +11,35 @@ class SessionManager(context: Context) {
         )
 
     fun saveToken(token: String) {
-        prefs.edit().putString("token", token).apply()
+        prefs.edit()
+            .putString("token", token)
+            .apply()
     }
 
     fun getToken(): String? {
         return prefs.getString("token", null)
     }
 
+    fun saveUserId(userId: String) {
+        prefs.edit()
+            .putString("userId", userId)
+            .apply()
+    }
+
+    fun getUserId(): String? {
+        return prefs.getString("userId", "")
+    }
+
     fun clearToken() {
-        prefs.edit().remove("token").apply()
+        prefs.edit()
+            .remove("token")
+            .apply()
+    }
+
+    fun clearSession() {
+        prefs.edit()
+            .remove("token")
+            .remove("userId")
+            .apply()
     }
 }

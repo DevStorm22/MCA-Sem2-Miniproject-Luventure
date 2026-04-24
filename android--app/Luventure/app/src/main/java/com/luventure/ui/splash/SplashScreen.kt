@@ -42,12 +42,12 @@ fun SplashScreen(
             ) {
                 onGoHome()
             } else {
-                session.clearToken()
+                session.clearSession()
                 onGoLogin()
             }
 
         } catch (e: Exception) {
-            session.clearToken()
+            session.clearSession()
             onGoLogin()
         }
     }
