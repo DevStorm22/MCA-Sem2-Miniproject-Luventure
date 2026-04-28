@@ -1,4 +1,4 @@
-package com.luventure.app.data.remote
+package com.luventure.data.remote
 
 import io.socket.client.IO
 import io.socket.client.Socket
@@ -10,6 +10,7 @@ object SocketManager {
     fun getSocket(): Socket {
 
         if (socket == null) {
+
             socket = IO.socket(
                 "http://10.0.2.2:5000"
             )
@@ -19,7 +20,9 @@ object SocketManager {
     }
 
     fun connect() {
-        getSocket().connect()
+        if (!getSocket().connected()) {
+            getSocket().connect()
+        }
     }
 
     fun disconnect() {

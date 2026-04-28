@@ -2,7 +2,7 @@ package com.luventure.app.ui.auth.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.luventure.app.data.remote.LoginRequest
+import com.luventure.data.remote.LoginRequest
 import com.luventure.app.data.remote.RetrofitClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

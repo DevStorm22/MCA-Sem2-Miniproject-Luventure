@@ -1,7 +1,6 @@
 package com.luventure.ui.home
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -11,7 +10,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
-import com.luventure.app.data.local.SessionManager
+import com.luventure.data.local.SessionManager
 import com.luventure.app.R
 
 @Composable
@@ -106,32 +105,6 @@ fun HomeScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Logout")
-        }
-    }
-}
-
-@Composable
-fun DashboardCard(
-    title: String,
-    desc: String
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = title,
-                fontSize = 20.sp
-            )
-
-            Spacer(
-                modifier = Modifier.height(6.dp)
-            )
-
-            Text(text = desc)
         }
     }
 }

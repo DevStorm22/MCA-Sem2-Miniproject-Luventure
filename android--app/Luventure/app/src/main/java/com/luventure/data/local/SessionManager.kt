@@ -1,4 +1,4 @@
-package com.luventure.app.data.local
+package com.luventure.data.local
 
 import android.content.Context
 
@@ -27,7 +27,7 @@ class SessionManager(context: Context) {
     }
 
     fun getUserId(): String? {
-        return prefs.getString("userId", "")
+        return prefs.getString("userId", null)
     }
 
     fun clearToken() {

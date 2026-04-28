@@ -7,7 +7,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
-import com.luventure.app.data.local.SessionManager
+import com.luventure.data.local.SessionManager
 import com.luventure.app.data.remote.RetrofitClient
 import kotlinx.coroutines.delay
 

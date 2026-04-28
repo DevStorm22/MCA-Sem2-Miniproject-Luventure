@@ -3,7 +3,7 @@ package com.luventure.app.ui.chat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.luventure.app.data.remote.RetrofitClient
-import com.luventure.app.data.remote.SocketManager
+import com.luventure.data.remote.SocketManager
 import com.luventure.ui.chat.MessageItem
 import com.luventure.ui.chat.SendMessageRequest
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,12 +18,10 @@ class ChatRoomViewModel : ViewModel() {
 
     val messages = _messages.asStateFlow()
 
-    fun load(
-        token: String,
-        id: String
-    ) {
-        viewModelScope.launch {
+    private var roomId = ""
 
+    fun load(token: String, id: String) {
+        viewModelScope.launch {
             try {
                 val res =
                     RetrofitClient.api.getMessages(
@@ -31,12 +29,8 @@ class ChatRoomViewModel : ViewModel() {
                         id
                     )
 
-                if (
-                    res.isSuccessful &&
-                    res.body() != null
-                ) {
-                    _messages.value =
-                        res.body()!!.data
+                if (res.isSuccessful && res.body() != null) {
+                    _messages.value = res.body()!!.data
                 }
 
             } catch (_: Exception) {
@@ -44,41 +38,36 @@ class ChatRoomViewModel : ViewModel() {
         }
     }
 
-    fun connectRoom(
-        conversationId: String
-    ) {
-        val socket =
-            SocketManager.getSocket()
+    fun connectRoom(conversationId: String) {
+
+        roomId = conversationId
+
+        val socket = SocketManager.getSocket()
 
         SocketManager.connect()
 
-        socket.emit(
-            "join_room",
-            conversationId
-        )
+        socket.emit("join_room", conversationId)
 
         socket.off("new_message")
 
         socket.on("new_message") { args ->
 
-            try {
-                val obj =
-                    args[0] as JSONObject
+            viewModelScope.launch {
 
-                val msg =
-                    MessageItem(
-                        _id =
-                            obj.getString("_id"),
-                        sender =
-                            obj.getString("sender"),
-                        text =
-                            obj.getString("text")
+                try {
+                    val obj = args[0] as JSONObject
+
+                    val msg = MessageItem(
+                        _id = obj.getString("_id"),
+                        sender = obj.getString("sender"),
+                        text = obj.getString("text")
                     )
 
-                _messages.value =
-                    _messages.value + msg
+                    _messages.value += msg
 
-            } catch (_: Exception) {
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
         }
     }
@@ -89,21 +78,32 @@ class ChatRoomViewModel : ViewModel() {
         text: String
     ) {
         viewModelScope.launch {
-
             try {
                 RetrofitClient.api.sendMessage(
                     "Bearer $token",
                     id,
                     SendMessageRequest(text)
                 )
-
-            } catch (_: Exception) {
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
 
+    fun disconnectRoom() {
+
+        val socket = SocketManager.getSocket()
+
+        if (roomId.isNotBlank()) {
+            socket.emit("leave_room", roomId)
+        }
+
+        socket.off("new_message")
+    }
+
     override fun onCleared() {
-        super.onCleared()
+        disconnectRoom()
         SocketManager.disconnect()
+        super.onCleared()
     }
 }

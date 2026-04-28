@@ -1,4 +1,6 @@
-package com.luventure.app.data.remote
+package com.luventure.data.remote
+
+import com.google.gson.annotations.SerializedName
 
 data class LoginRequest(
     val email: String,
@@ -6,9 +8,12 @@ data class LoginRequest(
 )
 
 data class LoginUser(
-    val id: String,
-    val name: String,
-    val email: String
+
+    @SerializedName(value = "_id", alternate = ["id"])
+    val id: String = "",
+
+    val name: String = "",
+    val email: String = ""
 )
 
 data class LoginData(

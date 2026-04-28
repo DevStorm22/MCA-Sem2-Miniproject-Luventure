@@ -11,7 +11,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.luventure.app.R
-import com.luventure.app.data.local.SessionManager
+import com.luventure.data.local.SessionManager
 import com.luventure.app.ui.auth.login.LoginViewModel
 import com.luventure.app.utils.Validators
 
@@ -37,9 +37,16 @@ fun LoginScreen(
     val session = SessionManager(context)
 
     LaunchedEffect(success, token, userId) {
-        if (success && token.isNotBlank()) {
+        if (
+            success &&
+            token.isNotBlank() &&
+            userId.isNotBlank()
+        ) {
             session.saveToken(token)
             session.saveUserId(userId)
+
+            println("SAVED USER ID = $userId")
+
             onLoginSuccess()
         }
     }

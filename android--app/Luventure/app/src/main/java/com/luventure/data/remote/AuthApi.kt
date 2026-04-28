@@ -1,11 +1,6 @@
 package com.luventure.data.remote
 
-import com.luventure.app.data.remote.BasicResponse
-import com.luventure.app.data.remote.LoginRequest
-import com.luventure.app.data.remote.LoginResponse
 import com.luventure.app.data.remote.MeResponse
-import com.luventure.app.data.remote.RegisterRequest
-import com.luventure.app.data.remote.UpdateProfileRequest
 import com.luventure.ui.chat.ConversationResponse
 import com.luventure.ui.chat.MessageResponse
 import com.luventure.ui.chat.SendMessageRequest

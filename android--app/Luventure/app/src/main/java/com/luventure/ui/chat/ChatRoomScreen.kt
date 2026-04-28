@@ -10,8 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.luventure.app.data.local.SessionManager
+import com.luventure.data.local.SessionManager
 import com.luventure.app.ui.chat.ChatRoomViewModel
+import androidx.activity.compose.BackHandler
+import androidx.compose.ui.platform.LocalFocusManager
 
 @Composable
 fun ChatRoomScreen(
@@ -19,18 +21,32 @@ fun ChatRoomScreen(
     currentUserId: String,
     onBack: () -> Unit
 ) {
+
     val context = LocalContext.current
     val session = SessionManager(context)
 
     val vm: ChatRoomViewModel = viewModel()
     val messages by vm.messages.collectAsState()
 
+    val focusManager = LocalFocusManager.current
+
     var text by remember { mutableStateOf("") }
+
+    BackHandler {
+        focusManager.clearFocus(force = true)
+        onBack()
+    }
 
     LaunchedEffect(conversationId) {
         session.getToken()?.let { token ->
             vm.load(token, conversationId)
             vm.connectRoom(conversationId)
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            vm.disconnectRoom()
         }
     }
 
@@ -40,39 +56,21 @@ fun ChatRoomScreen(
             .padding(12.dp)
     ) {
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
+        Text(
+            text = "Chat",
+            style = MaterialTheme.typography.titleLarge
+        )
 
-            Button(
-                onClick = { onBack() }
-            ) {
-                Text("Back")
-            }
-
-            Text(
-                text = "Chat",
-                style = MaterialTheme.typography.titleLarge
-            )
-
-            Spacer(
-                modifier = Modifier.width(8.dp)
-            )
-        }
-
-        Spacer(Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         LazyColumn(
-            modifier = Modifier.weight(1f),
-            reverseLayout = false
+            modifier = Modifier.weight(1f)
         ) {
-
             items(messages) { msg ->
 
                 val isMine =
-                    msg.sender.trim() ==
-                            currentUserId.trim()
+                    msg.sender.trim()
+                        .equals(currentUserId.trim(), true)
 
                 Row(
                     modifier = Modifier
@@ -80,17 +78,14 @@ fun ChatRoomScreen(
                         .padding(vertical = 4.dp),
 
                     horizontalArrangement =
-                        if (isMine)
-                            Arrangement.End
-                        else
-                            Arrangement.Start
+                        if (isMine) Arrangement.End
+                        else Arrangement.Start
                 ) {
 
                     Surface(
                         shape = RoundedCornerShape(18.dp),
                         tonalElevation = 2.dp
                     ) {
-
                         Text(
                             text = msg.text,
                             modifier = Modifier.padding(
@@ -103,7 +98,7 @@ fun ChatRoomScreen(
             }
         }
 
-        Spacer(Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth()
@@ -111,28 +106,21 @@ fun ChatRoomScreen(
 
             OutlinedTextField(
                 value = text,
-                onValueChange = {
-                    text = it
-                },
-                modifier = Modifier.weight(1f),
-                placeholder = {
-                    Text("Type message")
-                }
+                onValueChange = { text = it },
+                modifier = Modifier.weight(1f)
             )
 
-            Spacer(Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(8.dp))
 
             Button(
                 onClick = {
                     if (text.isNotBlank()) {
                         session.getToken()?.let { token ->
-
                             vm.send(
                                 token,
                                 conversationId,
                                 text.trim()
                             )
-
                             text = ""
                         }
                     }

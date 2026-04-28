@@ -3,7 +3,7 @@ package com.luventure.app.ui.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.luventure.app.data.remote.RetrofitClient
-import com.luventure.app.data.remote.UpdateProfileRequest
+import com.luventure.data.remote.UpdateProfileRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
